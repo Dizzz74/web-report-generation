@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Kết quả CWE</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 1100px;
+            margin-top: 50px;
+        }
+        h1, h2 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        th {
+            background-color: #3498db;
+            color: #fff;
+        }
+        .btn-primary {
+            background-color: #e74c3c;
+            border-color: #e74c3c;
+        }
+        .btn-primary:hover {
+            background-color: #c0392b;
+            border-color: #c0392b;
+        }
+        .alert-danger {
+            background-color: #e74c3c;
+            border-color: #e74c3c;
+            color: #fff;
+        }
+        table {
+            border-radius: 8px;
+            overflow: hidden;
+            width: 100%;
+            box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+        }
+        tbody tr:hover {
+            background-color: #ecf0f1;
+        }
+        canvas {
+            width: 400px; /* Điều chỉnh kích thước của biểu đồ tại đây */
+            height: 400px;
+            margin: 20px auto;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <div >
+        <h1 class="text-center">Báo Cáo kiểm thử xâm nhập web</h1>
+        <h2 style="font-size: 35px;">* Tiêu chí đánh giá: Chuẩn CWE</h2>
+        <h2 style="font-size: 35px;">I.Giai đoạn thăm dò </h2>
+        <h3 style="font-size: 25px;">
+            - Do thám: Do dùng localhost nên bỏ qua bước thu thập thông tin
+        </h3>
+        <div style="height: 20px;"></div>
+        <h3 style="font-size: 25px;">
+           - Thu thập lỗ hổng và phân tích :
+        </h3>
+    </div>
+    <div style="height: 20px;"></div>
+<div>
+    <table>
+        <tr>
+            {% for cwe in cwe_list %}
+                <td>{{ cwe }}</td>
+            {% endfor %}
+        </tr>
+    </table>
+</div>
+<div style="height: 20px;"></div>
+<div>
+<h2 style="font-size: 35px;">II.Giai đoạn khai thác </h2>
+ <!-- Thêm vào phần hiển thị chữ "Đã khai thác thành công lỗi SQL injection" -->
+ <div class="mt-4">
+    {% if 'CWE-94' in cwe_list and 'CWE-540' in cwe_list %}
+        <h3>Đã khai thác thành công lỗi Command injection</h3>
+    {% elif 'CWE-434' in cwe_list %}
+        <h3>Đã khai thác thành công lỗi File Upload</h3>
+    {% elif 'CWE-89' in cwe_list %}
+        <h3>Đã khai thác thành công lỗi SQL Injection</h3>
+    {% endif %}
+</div>
+
+</div>
+
+    <h1 class="text-center">Kết quả</h1>
+    
+    <div class="mt-4">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th style="width: 5%;">STT</th>
+                    <th style="width: 10%;">CWE</th>
+                    <th style="width: 10%;">Độ ưu tiên</th>
+                    <th style="width: 15%;">Tên</th>
+                    <th style="width: 30%;">Mô tả</th>
+                    <th style="width: 30%;">Cách khắc phục</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for cwe in cwe_list %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ cwe }}</td>
+                    {% if cwe == 'CWE-89' %}
+                    <td>High</td>
+                    <td>SQL Injection</td>
+                    <td>SQL injection (SQLi) refers to an injection attack wherein an attacker can execute malicious SQL statements that control a web application's database server. An attacker can use SQL injection to bypass a web application's authentication and authorization mechanisms and retrieve the contents of an entire database. SQLi can also be used to add, modify and delete records in a database, affecting data integrity. Under the right circumstances, SQLi can also be used by an attacker to execute OS commands, which may then be used to escalate an attack even further.</td>
+                    <td>Use parameterized queries when dealing with SQL queries that contain user input. Parameterized queries allow the database to understand which parts of the SQL query should be considered as user input, therefore solving SQL injection.</td>
+                    {% elif cwe == 'CWE-284' %}
+                    <td>High</td>
+                    <td>Cookies with missing, inconsistent or contradictory properties</td>
+                    <td>At least one of the following cookies properties causes the cookie to be invalid or incompatible with either a different property of the same cookie, or with the environment the cookie is being used in. Although this is not a vulnerability in itself, it will likely lead to unexpected behavior by the application, which in turn may cause secondary security issues.</td>
+                    <td>Ensure that the cookies configuration complies with the applicable standards.</td>
+                    {% elif cwe == 'CWE-538' %}
+                    <td>Medium</td>
+                    <td>Server-based source code disclosures</td>
+                    <td>An attacker can gather sensitive information (database connection strings, application logic) by analyzing the source code. This information can be used to conduct further attacks.</td>
+                    <td>Remove these file(s) from your website or change their permissions to remove access.</td>
+                    {% elif cwe == 'CWE-200' %}
+                    <td>High</td>
+                    <td>Possible sensitive files</td>
+                    <td>This file is not directly linked from the website. This check looks for common sensitive resources like password files, configuration files, log files, include files, statistics data, database dumps. Each one of these files could help an attacker to learn more about his target. This file may expose sensitive information that could help a malicious user to prepare more advanced attacks.</td>
+                    <td>Restrict access to this file or remove it from the website.</td>
+                    {% elif cwe == 'CWE-209' %}
+                    <td>Medium</td>
+                    <td>Programming Error Messages</td>
+                    <td>Application error or warning messages may expose sensitive information about an application's internal workings to an attacker. These messages may also contain the location of the file that produced an unhandled exception.</td>
+                    <td>Verify that these page(s) are disclosing error or warning messages and properly configure the application to log errors to a file instead of displaying the error to the user.</td>
+                    {% elif cwe == 'CWE-16' %}
+                    <td>Medium</td>
+                    <td>Insecure HTTP Usage</td>
+                    <td>The web application uses HTTP protocol, but doesn't automatically redirect users to HTTPS.</td>
+                    <td>It's recommended to implement best practices of HTTP Redirection into your web application. Consult web references for more information </td>
+                    {% elif cwe == 'CWE-162' %}
+                    <td>Medium</td>
+                    <td>Missing Initialization of Database.</td>
+                    <td>This vulnerability occurs when an application or system fails to initialize the database properly or does not manage the database securely. This can lead to issues such as unauthorized access, unintended execution of SQL code, or even data loss.</td>
+                    <td>To address CWE-162, developers need to ensure that the database is initialized and managed properly. Security measures such as access control, using secure storage procedures, and avoiding direct execution of user-provided SQL code are necessary steps to prevent this vulnerability. Additionally, using available libraries or frameworks to handle database operations can help mitigate risks.</td>
+                    {% elif cwe == 'CWE-79' %}
+                    <td>High</td>
+                    <td>Cross-site Scripting</td>
+                    <td>Cross-site Scripting (XSS) refers to client-side code injection attack wherein an attacker can execute malicious scripts into a legitimate website or web application. XSS occurs when a web application makes use of unvalidated or unencoded user input within the output it generates</td>
+                    <td>Apply context-dependent encoding and/or validation to user input rendered on a page</td>
+                    {% elif cwe == 'CWE-947' %}
+                    <td>High</td>
+                    <td>Cross-site Scripting</td>
+                    <td>Cross-site Scripting (XSS) refers to client-side code injection attack wherein an attacker can execute malicious scripts into a legitimate website or web application. XSS occurs when a web application makes use of unvalidated or unencoded user input within the output it generates</td>
+                    <td>Apply context-dependent encoding and/or validation to user input rendered on a page</td>
+                    {% elif cwe == 'CWE-434' %}
+                    <td>High</td>
+                    <td>Unrestricted File Upload</td>
+                    <td>This script is possibly vulnerable to unrestricted file upload. Various web applications allow users to upload files (such as pictures, images, sounds, ...). Uploaded files may pose a significant risk if not handled correctly. A remote attacker could send a multipart/form-data POST request with a specially-crafted filename or mime type and execute arbitrary code. Acunetix was able to upload a file containing executable code and get this code executed. Check Attack details for more information about this attack.</td>
+                    <td>Restrict file types accepted for upload: check the file extension and only allow certain files to be uploaded. Use a whitelist approach instead of a blacklist. Check for double extensions such as .php.png. Check for files without a filename like .htaccess (on ASP.NET, check for configuration files like web.config). Change the permissions on the upload folder so the files within it are not executable. If possible, rename the files that are uploaded.</td>
+                    {% elif cwe == 'CWE-540' %}
+                    <td>Medium</td>
+                    <td>Inclusion of Sensitive Information in Source Code</td>
+                    <td>Source code on a web server or repository often contains sensitive information and should generally not be accessible to users.</td>
+                    <td>Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.</td>
+                    {% elif cwe == 'CWE-94' %}
+                    <td>High</td>
+                    <td>Code Injection</td>
+                    <td>The product constructs all or part of a code segment using externally-influenced input from an upstream component, but it does not neutralize or incorrectly neutralizes special elements that could modify the syntax or behavior of the intended code segment.</td>
+                    <td>Your script should filter metacharacters from user input.</td>
+                    {% elif cwe == 'CWE-538' %}
+                    <td>Medium</td>
+                    <td>Insertion of Sensitive Information into Sent Data</td>
+                    <td>The product places sensitive information into files or directories that are accessible to actors who are allowed to have access to the files, but not to the sensitive information</td>
+                    <td>Remove these file(s) from your website or change their permissions to remove access.</td>
+                    {% elif cwe == 'CWE-209' %}
+                    <td>Low</td>
+                    <td>Information Exposure Through an Error Message</td>
+                    <td>The product generates an error message that includes sensitive information about its environment, users, or associated data.</td>
+                    <td>Verify thatthese page(s) are disclosing error or warning messages and properly configure the application to log errors to a file instead of displaying the error to the user.</td>
+                    {% elif cwe == 'CWE-200' %}
+                    <td>Low</td>
+                    <td>Exposure of Sensitive Information to an Unauthorized Actor</td>
+                    <td>The product exposes sensitive information to an actor that is not explicitly authorized to have access to that information.</td>
+                    <td>Properly configure the web server notto disclose information about an application's internal workings to the user. Consultthe 'Web references' section for more information.</td>
+                    {% elif cwe == 'CWE-16' %}
+                    <td>Medium</td>
+                    <td>Configuration Weaknesses</td>
+                    <td>Weaknesses in this category are typically introduced during the configuration of the software.</td>
+                    <td>It's recommended to implement best practices of HTTP Redirection into your web application. Consult web references for more information</td>
+                    {% elif cwe == 'CWE-' %}
+                    <td>Medium</td>
+                    <td>Configuration Weaknesses</td>
+                    <td>Weaknesses in this category are typically introduced during the configuration of the software.</td>
+                    <td>It's recommended to implement best practices of HTTP Redirection into your web application. Consult web references for more information</td>
+                    {% else %}
+                    <td></td>
+                    <td></td>
+                    <td>Mô tả cho CWE {{ cwe }}</td>
+                    <td>Cách khắc phục {{ cwe }}</td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="mt-4 text-center">
+        <a href="/" class="btn btn-primary">Trở về trang chủ</a>
+    </div>
+    <button id="printButton">In Báo Cáo</button>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    document.getElementById('printButton').addEventListener('click', function() {
+        window.print(); // Gọi hàm print() để in nội dung của trang web
+    });
+</script>
+
+</body>
+</html>
